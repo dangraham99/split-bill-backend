@@ -1,0 +1,59 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Transaction {
+  id           Int      @id @default(autoincrement())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  title        String   @db.VarChar(255)
+  content      String?
+  valueInCents Int
+  published    Boolean  @default(false)
+  owner        User     @relation(fields: [ownerId], references: [id])
+  ownerId      Int
+  group        Group    @relation(fields: [groupId], references: [id])
+  groupId      Int
+}
+
+model Group {
+  id             Int            @id @default(autoincrement())
+  bio            String?
+  userId         Int            @unique
+  transactions   Transaction[]
+  users          UsersInGroup[]
+  balanceInCents Int
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+}
+
+model User {
+  id           Int            @id @default(autoincrement())
+  email        String         @unique
+  name         String?
+  transactions Transaction[]
+  groups       UsersInGroup[]
+}
+
+model UsersInGroup {
+  id                 Int      @id @default(autoincrement())
+  user               User     @relation(fields: [userId], references: [id])
+  userId             Int
+  group              Group    @relation(fields: [groupId], references: [id])
+  groupId            Int
+  userBalanceInCents Int
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  admin              Boolean
+}
