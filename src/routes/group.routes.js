@@ -10,7 +10,8 @@ const prisma = new PrismaClient()
 router.get('/', async (req, res) => {
     const groups = await prisma.groups.findMany({
         include: {
-            users: true
+            users: true,
+            transactions: true
         }
     })
 
@@ -43,7 +44,8 @@ router.get('/:groupID', async(req, res) => {
                     include: {
                         user: true
                     }
-                }
+                },
+                transactions: true
             }
         })
 
