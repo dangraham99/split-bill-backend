@@ -52,15 +52,19 @@ router.post('/create', async (req, res) => {
 router.get('/:transactionID', async(req, res) => {
 
     try {
-        const user = await prisma.users.findFirstOrThrow({
+        const transaction = await prisma.transactions.findFirstOrThrow({
             where: {
                 id: parseInt(req.params.transactionID)
             },
             include: {
                 group: true,
-                user: true
-            }
+                owner: true
+                
+            },
+          
         })
+
+        res.send(transaction)
     }
     catch(e) {
         const niceError = ParseErrors(e)
@@ -69,7 +73,7 @@ router.get('/:transactionID', async(req, res) => {
 
 
 
-    res.send(user)
+   
 
 })
 
