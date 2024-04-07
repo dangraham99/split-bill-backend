@@ -1,5 +1,5 @@
 export const ParseErrors = (error) => {
-
+    console.log(error)
     var errorObject = {}
     
     if (error.name = "NotFoundError") {
