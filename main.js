@@ -21,6 +21,27 @@ app.get('/user/create', async (req, res) => {
 
 })
 
+app.get('/user/:userID', async(req, res) => {
+    const user = await prisma.users.findFirstOrThrow({
+        where: {
+            id: parseInt(req.params.userID)
+        },
+        include: {
+            groups: {
+                include: {
+                    group: true
+                }
+            }
+        }
+    })
+
+   
+
+    res.send(user)
+
+
+})
+
 app.post('/group/create', async(req, res) => {
     console.log(req.body)
 
