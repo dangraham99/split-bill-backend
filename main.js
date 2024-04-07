@@ -7,7 +7,41 @@ app.use(express.json())
 const port = 3000
 const prisma = new PrismaClient()
 
-app.get('/user/create', async (req, res) => {
+
+const ParseErrors = (error) => {
+
+    var errorObject = {}
+    
+    if (error.name = "NotFoundError") {
+        errorObject = {
+            "status": 404,
+            "message": "The requested resource was not found."
+        }
+    }
+    
+    return errorObject
+}
+
+/*
+Parses PrismaClient errors and returns a plain English response
+WIP, will add further error types once known.
+
+*/
+
+//User CRUD
+
+app.get('/users', async (req, res) => {
+    const users = await prisma.users.findMany({
+        include: {
+            groups: true
+        }
+    })
+
+    res.send(users)
+})
+
+
+app.post('/user/create', async (req, res) => {
 
     const createdUser = await prisma.users.create({
         data: {
@@ -21,25 +55,45 @@ app.get('/user/create', async (req, res) => {
 
 })
 
+
 app.get('/user/:userID', async(req, res) => {
-    const user = await prisma.users.findFirstOrThrow({
-        where: {
-            id: parseInt(req.params.userID)
-        },
-        include: {
-            groups: {
-                include: {
-                    group: true
+
+    try {
+        const user = await prisma.users.findFirstOrThrow({
+            where: {
+                id: parseInt(req.params.userID)
+            },
+            include: {
+                groups: {
+                    include: {
+                        group: true
+                    }
                 }
             }
-        }
-    })
+        })
+    }
+    catch(e) {
+        const niceError = ParseErrors(e)
+        res.status(niceError.status).send(niceError)
+    }
 
-   
+
 
     res.send(user)
 
+})
 
+
+//Group CRUD
+
+app.get('/groups', async (req, res) => {
+    const users = await prisma.groups.findMany({
+        include: {
+            users: true
+        }
+    })
+
+    res.send(groups)
 })
 
 app.post('/group/create', async(req, res) => {
@@ -56,15 +110,31 @@ app.post('/group/create', async(req, res) => {
     res.send(createdGroup)
 })
 
+app.get('/group/:groupID', async(req, res) => {
 
-app.get('/', async (req, res) => {
-    const users = await prisma.users.findMany({
-        include: {
-            groups: true
-        }
-    })
+    try {
+        const group = await prisma.groups.findFirstOrThrow({
+            where: {
+                id: parseInt(req.params.groupID)
+            },
+            include: {
+                users: {
+                    include: {
+                        user: true
+                    }
+                }
+            }
+        })
 
-    res.send(users)
+        res.send(group)
+    }
+
+    catch(e){
+        const niceError = ParseErrors(e)
+        res.status(niceError.status).send(niceError)
+    }
+ 
+
 })
 
 
