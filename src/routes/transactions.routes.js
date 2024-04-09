@@ -1,48 +1,20 @@
 import express from 'express'
 export const router = express.Router()
 import { ParseErrors } from '../utils/errors.js'
-import { faker } from '@faker-js/faker'
-import { PrismaClient } from '@prisma/client'
-const prisma = new PrismaClient()
+import {show, create, read, update, del} from '../controllers/transactions.controller.js'
+
 
 //Transactions CRUD
 
 router.get('/', async (req, res) => {
-    const transactions = await prisma.transactions.findMany({
-        include: {
-            group: true,
-            owner: true
-        }
-    })
-
+    const transactions = await show(req)
     res.send(transactions)
 })
 
 
 router.post('/create', async (req, res) => {
 
-   
-    //dummy data
-    const createdTransaction = await prisma.transactions.create({
-        data: {
-            title: faker.commerce.productName(),
-            content: faker.commerce.productDescription(),
-            valueInCents: Math.floor(Math.random() * 1010),
-            published: Math.floor(Math.random() * 2) ? true : false,
-            owner: {
-                connect: {
-                    id:  Math.floor(Math.random() * 23),
-                }
-            },
-            group: {
-                connect: {
-                    id: 4
-                }
-            }
-        },
-        
-    })
-
+   const createdTransaction = await create(req)
     res.send(createdTransaction)
 
 
@@ -52,19 +24,10 @@ router.post('/create', async (req, res) => {
 router.get('/:transactionID', async(req, res) => {
 
     try {
-        const transaction = await prisma.transactions.findFirstOrThrow({
-            where: {
-                id: parseInt(req.params.transactionID)
-            },
-            include: {
-                group: true,
-                owner: true
-                
-            },
-          
-        })
-
+        
+        const transaction = await read(req)
         res.send(transaction)
+        
     }
     catch(e) {
         const niceError = ParseErrors(e)
@@ -72,7 +35,7 @@ router.get('/:transactionID', async(req, res) => {
     }
 
 
-
+   
    
 
 })
