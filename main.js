@@ -15,11 +15,6 @@ app.use('/users', userRoutes)
 app.use('/groups', groupRoutes)
 app.use('/transactions', transactionRoutes)
 
-/*
-Parses PrismaClient errors and returns a plain English response
-WIP, will add further error types once known.
-
-*/
 
 
 
