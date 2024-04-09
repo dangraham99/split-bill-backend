@@ -1,62 +1,34 @@
 import express from 'express'
 import { ParseErrors } from '../utils/errors.js'
 const router = express.Router()
-import { faker } from '@faker-js/faker'
 import { PrismaClient } from '@prisma/client'
+import { show, create, read, update, del } from "../controllers/group.controller.js"
 const prisma = new PrismaClient()
 
 //Group CRUD
 
 router.get('/', async (req, res) => {
-    const groups = await prisma.groups.findMany({
-        include: {
-            users: true,
-            transactions: true
-        }
-    })
-
+    const groups = await show(req)
     res.send(groups)
 })
 
 router.post('/create', async(req, res) => {
-    console.log(req.body)
-
-    const createdGroup = await prisma.groups.create({
-        data:{
-            title: req.body.title,
-            users: {
-                create: [{userId: req.body.admin, admin: true}]
-            }
-        },
-    })
+    createdGroup = await create(req)
     res.send(createdGroup)
 })
 
 router.get('/:groupID', async(req, res) => {
 
     try {
-        const group = await prisma.groups.findFirstOrThrow({
-            where: {
-                id: parseInt(req.params.groupID)
-            },
-            include: {
-                users: {
-                    include: {
-                        user: true
-                    }
-                },
-                transactions: true
-            }
-        })
-
+        const group = await read(req)
         res.send(group)
+    } catch (e) {
+            const niceError = ParseErrors(e)
+            res.status(niceError.status).send(niceError)
+        
     }
 
-    catch(e){
-        const niceError = ParseErrors(e)
-        res.status(niceError.status).send(niceError)
-    }
- 
+  
 
 })
 
