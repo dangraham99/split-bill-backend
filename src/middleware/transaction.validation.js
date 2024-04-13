@@ -25,7 +25,11 @@ const transactionValidationSchema = {
      },  
      valueInCents: {
         exists: {errorMessage: "Transaction must have a value."},
-        isInteger: {errorMessage: "You must enter a valid number."},
+        isInt: {
+            min: 0,
+            allow_leading_zeros: false,
+            errorMessage: "You must enter a valid number."
+        },
         escape: true
      },
      published: {
