@@ -2,6 +2,8 @@ import express from 'express'
 import { show, create, read, update, del } from '../controllers/user.controller.js'
 const router = express.Router()
 import { ParseErrors } from '../utils/errors.js'
+import { validate } from '../middleware/validate.js'
+import { userValidationSchema } from '../middleware/user.validation.js'
 
 
 //User CRUD
@@ -13,10 +15,15 @@ router.get('/', async (req, res) => {
 })
 
 
-router.post('/create', async (req, res) => {
+router.post('/create', validate(userValidationSchema), async (req, res) => {
 
-    const createdUser = await create(req)
-    res.send(createdUser)
+   
+
+        const createdUser = await create(req)
+        res.send(createdUser)
+    
+
+        res.send({errors: result.array()})
 
 
 })
@@ -31,7 +38,7 @@ router.get('/:userID', async(req, res) => {
     }
     catch(e) {
         const niceError = ParseErrors(e)
-        res.status(niceError.status).send(niceError)
+        res.status(niceError.code).send(niceError)
     }
 
 
