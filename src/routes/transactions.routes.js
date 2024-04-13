@@ -16,8 +16,15 @@ router.get('/', async (req, res) => {
 
 router.post('/create', validate(transactionValidationSchema), async (req, res) => {
 
-   const createdTransaction = await create(req)
+    try {
+  
+    const createdTransaction = await create(req)
     res.send(createdTransaction)
+    }
+    catch(e) {
+        const niceError = ParseErrors(e)
+        res.status(niceError.code).send(niceError)
+    }
 
 
 })
