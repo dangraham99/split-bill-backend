@@ -23,7 +23,7 @@ router.post('/create', validate(userValidationSchema), async (req, res) => {
         res.send(createdUser)
     
 
-        res.send({errors: result.array()})
+        
 
 
 })
