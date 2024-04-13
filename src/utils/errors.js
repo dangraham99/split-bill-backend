@@ -16,6 +16,12 @@ export const ParseErrors = (error) => {
         }
         
     }
+    else if (error.name == "SyntaxError"){
+        errorObject = {
+            "code": 400,
+            "message": error.message
+        }
+    }
     else {
         errorObject = {
             "code": 500,
