@@ -18,9 +18,14 @@ router.get('/', async (req, res) => {
 router.post('/create', validate(userValidationSchema), async (req, res) => {
 
    
-
+    try {
         const createdUser = await create(req)
         res.send(createdUser)
+    }
+    catch(e) {
+        const niceError = ParseErrors(e)
+        res.status(niceError.code).send(niceError)
+    }
     
 
         
