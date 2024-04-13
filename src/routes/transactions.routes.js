@@ -2,6 +2,8 @@ import express from 'express'
 export const router = express.Router()
 import { ParseErrors } from '../utils/errors.js'
 import {show, create, read, update, del} from '../controllers/transactions.controller.js'
+import { validate } from '../middleware/validate.js'
+import { transactionValidationSchema } from '../middleware/transaction.validation.js'
 
 
 //Transactions CRUD
@@ -12,7 +14,7 @@ router.get('/', async (req, res) => {
 })
 
 
-router.post('/create', async (req, res) => {
+router.post('/create', validate(transactionValidationSchema), async (req, res) => {
 
    const createdTransaction = await create(req)
     res.send(createdTransaction)
