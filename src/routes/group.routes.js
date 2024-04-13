@@ -3,6 +3,8 @@ import { ParseErrors } from '../utils/errors.js'
 const router = express.Router()
 import { PrismaClient } from '@prisma/client'
 import { show, create, read, update, del } from "../controllers/group.controller.js"
+import { validate } from '../middleware/validate.js'
+import { groupValidationSchema } from '../middleware/group.validation.js'
 const prisma = new PrismaClient()
 
 //Group CRUD
@@ -12,9 +14,20 @@ router.get('/', async (req, res) => {
     res.send(groups)
 })
 
-router.post('/create', async(req, res) => {
-    createdGroup = await create(req)
-    res.send(createdGroup)
+router.post('/create', validate(groupValidationSchema), async(req, res) => {
+    
+    try {
+
+        const createdGroup = await create(req)
+        res.send(createdGroup)
+
+    } catch(e) {
+        const niceError = ParseErrors(e)
+        res.status(niceError.code).send(niceError)
+    }
+
+    
+   
 })
 
 router.get('/:groupID', async(req, res) => {
