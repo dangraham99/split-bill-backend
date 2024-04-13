@@ -31,7 +31,7 @@ router.get('/:transactionID', async(req, res) => {
     }
     catch(e) {
         const niceError = ParseErrors(e)
-        res.status(niceError.status).send(niceError)
+        res.status(niceError.code).send(niceError)
     }
 
 

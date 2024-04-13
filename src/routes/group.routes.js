@@ -24,7 +24,7 @@ router.get('/:groupID', async(req, res) => {
         res.send(group)
     } catch (e) {
             const niceError = ParseErrors(e)
-            res.status(niceError.status).send(niceError)
+            res.status(niceError.code).send(niceError)
         
     }
 
