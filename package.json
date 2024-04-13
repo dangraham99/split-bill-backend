@@ -11,7 +11,8 @@
   "license": "ISC",
   "dependencies": {
     "@prisma/client": "^5.12.1",
-    "express": "^4.19.2"
+    "express": "^4.19.2",
+    "express-validator": "^7.0.1"
   },
   "devDependencies": {
     "@faker-js/faker": "^8.4.1",
