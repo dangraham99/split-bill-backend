@@ -20,7 +20,6 @@ const userValidationSchema = {
          options: {min: 3}
       },
       trim: true,
-      toLowerCase: true,
       escape: true
    }   
 
