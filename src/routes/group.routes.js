@@ -11,6 +11,7 @@ const prisma = new PrismaClient()
 
 router.get('/', async (req, res) => {
     const groups = await show(req)
+    console.log("Request made for all groups")
     res.send(groups)
 })
 
