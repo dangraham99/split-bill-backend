@@ -27,12 +27,12 @@ async function create(req){
             published: Math.floor(Math.random() * 2) ? true : false,
             owner: {
                 connect: {
-                    id:  Math.floor(Math.random() * (max - 8 + 1) + 8),
+                    id:  req.body.ownerId,
                 }
             },
             group: {
                 connect: {
-                    id: 4
+                    id: req.body.groupId
                 }
             }
         },
