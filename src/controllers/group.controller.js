@@ -1,11 +1,12 @@
 import { PrismaClient } from '@prisma/client'
+import { faker } from '@faker-js/faker'
 
 const prisma = new PrismaClient()
 
 async function show(req) {
     const groups = await prisma.groups.findMany({
         include: {
-            users: true,
+            users: { include: {user: true}},
             transactions: true
         }
     })
@@ -20,7 +21,7 @@ async function create(req){
 
     const createdGroup = await prisma.groups.create({
         data:{
-            title: req.body.title,
+            title: faker.lorem.sentence({ min: 1, max: 3 }),
             users: {
                 create: [{userId: req.body.admin, admin: true}]
             }
