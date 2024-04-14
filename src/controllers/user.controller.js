@@ -24,6 +24,7 @@ async function create(req){
         data: {
             name: faker.person.fullName(),
             email: faker.internet.email(),
+            avatar: faker.image.urlLoremFlickr({category: "business"}),
             //for test users make all hashes of 'password'
             password: await bcrypt.hash("password", 14) 
         },
