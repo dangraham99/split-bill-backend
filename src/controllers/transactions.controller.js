@@ -23,7 +23,7 @@ async function create(req){
         data: {
             title: faker.commerce.productName(),
             content: faker.commerce.productDescription(),
-            valueInCents: Math.floor(Math.random() * 1010),
+            valueInCents: Math.floor(Math.random() * 5070),
             published: Math.floor(Math.random() * 2) ? true : false,
             owner: {
                 connect: {
