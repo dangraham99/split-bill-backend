@@ -45,7 +45,12 @@ async function read(req) {
                         user: true
                     }
                 },
-                transactions: true
+                transactions: {
+                    include: {
+                        //TODO: limit the fields that are shown with this include
+                        owner: true
+                    }
+                }
             }
         })
 
