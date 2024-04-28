@@ -46,6 +46,7 @@ async function read(req) {
                     }
                 },
                 transactions: {
+                    orderBy: { createdAt: "desc"},
                     include: {
                         //TODO: limit the fields that are shown with this include
                         owner: true
